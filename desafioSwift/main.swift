@@ -23,22 +23,24 @@ struct ListaTarefas : Codable {
             }
     }
     
-    mutating func editarTarefa(titulo: String, novaTarefa:Tarefa){
-        let tarefaToEditIndex: Int = lista.firstIndex(where: {
-            $0.titulo == titulo
-        })!
-        
-        lista[tarefaToEditIndex].titulo = novaTarefa.titulo
-        lista[tarefaToEditIndex].descricao = novaTarefa.descricao
-        lista[tarefaToEditIndex].concluida = novaTarefa.concluida
+    mutating func editarTarefa(tarefaAntiga: Tarefa, novaTarefa:Tarefa){
+        if let index: Int = lista.firstIndex(where: {tarefa in
+            tarefa.titulo == tarefaAntiga.titulo && tarefa.descricao == tarefaAntiga.descricao
+        }){
+            lista[index].titulo = novaTarefa.titulo
+            lista[index].descricao = novaTarefa.descricao
+            lista[index].concluida = novaTarefa.concluida
+        }
     }
     
-    mutating func alterarStatusTarefa(titulo: String, status: Bool){
-        let tarefaToEditIndex: Int = lista.firstIndex(where: {
-            $0.titulo == titulo
-        })!
-        
-        lista[tarefaToEditIndex].concluida = status
+    mutating func alterarStatusTarefa(searchTerm: String){
+        if let tarefaToEditIndex = lista.firstIndex(where: {$0.titulo.lowercased().contains(searchTerm.lowercased()) ||  $0.descricao.lowercased().contains(searchTerm.lowercased())
+}) {
+            lista[tarefaToEditIndex].concluida = !lista[tarefaToEditIndex].concluida
+        } else {
+            print("Tarefa não encontrada :( ")
+        }
+
     }
     
     func listarTarefas(){
@@ -48,6 +50,7 @@ struct ListaTarefas : Codable {
             print("Tarefa \(resultado.count)")
             print("Título: \(tarefa.titulo)")
             print("Descrição: \(tarefa.descricao)")
+            print(tarefa.concluida ? "A tarefa foi concluída": "A tarefa não foi concluída")
             print("")
         }
         
@@ -58,7 +61,6 @@ struct ListaTarefas : Codable {
             result = lista.filter({ tarefa in
                 tarefa.titulo.lowercased().contains(searchTerm.lowercased()) ||  tarefa.descricao.lowercased().contains(searchTerm.lowercased())
             })
-        
         if result.isEmpty{
             print("Nenhuma tarefa encontrada :( ")
             return nil
@@ -74,17 +76,14 @@ struct ListaTarefas : Codable {
             }
             return result.enumerated()
         }
-        
-        
     }
     
     func criarJSON(){
         // Criar uma instância de JSONEncoder
         let encoder = JSONEncoder()
-        
         do {
             // Tentar codificar a struct para JSON
-            let jsonData = try encoder.encode(listaJoao)
+            let jsonData = try encoder.encode(listaNewUser)
             
             // Converta para uma string de JSON para impressão
             if let jsonString = String(data: jsonData, encoding: .utf8) {
@@ -106,25 +105,10 @@ struct ListaTarefas : Codable {
     
 }
 
-var lerLivros = Tarefa(titulo: "Harry potter", descricao: "Um livro sobre um mundo magico", concluida: false)
-var academia = Tarefa(titulo: "Malhar", descricao: "Correr na esteira", concluida: false)
-var farmacia = Tarefa(titulo: "Remedio", descricao: "Comprar antialergico", concluida: false)
-var desenhar = Tarefa(titulo: "Desenhar", descricao: "estudar perspectiva", concluida: false)
-var pintura = Tarefa(titulo: "Pintura", descricao: "estudar cores", concluida: false)
-var pintura2 = Tarefa(titulo: "Pintura", descricao: "estudar sombreamento", concluida: false)
-
-var swift = Tarefa(titulo: "Swift", descricao: "praticar structs", concluida: false)
-var plantas = Tarefa(titulo: "Plantas", descricao: "aguar plantas", concluida: false)
-
-var listaJoao = ListaTarefas(lista: [lerLivros,academia,farmacia,desenhar,pintura,pintura2])
-
-//listaJoao.adicionarTarefa(novaTarefa: swift,plantas)
-//listaJoao.removerTarefa(tarefaRemovida: "swift")
-//listaJoao.listarTarefas()
-//listaJoao.pesquisarTarefa(searchTerm: "pintura")
-
 var listaNewUser = ListaTarefas(lista: [])
-func newTarefa(){
+
+
+func novaTarefa(){
     print("Digite o titulo: ")
     var titulo: String = ""
     if let unwrapTitulo = readLine(){
@@ -153,8 +137,49 @@ func newTarefa(){
     print("A tarefa foi adicionada com sucesso.\n")
 }
 
-func excluirTarefa(search: String) {
-    if let tupla: EnumeratedSequence<[Tarefa]> = listaNewUser.pesquisarTarefa(searchTerm: search) {
+func editarTarefa(searchTerm: String){
+    if let tupla: EnumeratedSequence<[Tarefa]> = listaNewUser.pesquisarTarefa(searchTerm: searchTerm) {
+        print("\nEscolha o index da tarefa para edicao")
+        if let input = readLine(), let number = Int(input) {
+            let tarefa = tupla.first(where: { element in
+                element.0 == number-1
+            })
+            print("Digite o novo titulo: ")
+            var titulo: String = ""
+            if let unwrapTitulo = readLine(){
+                titulo = unwrapTitulo.isEmpty ? tarefa!.1.titulo : unwrapTitulo
+            }
+            
+            print("Digite a nova descricao: ")
+            var descricao: String = ""
+            if let unwrapDescricao = readLine(){
+                descricao = unwrapDescricao.isEmpty ? tarefa!.1.titulo : unwrapDescricao
+            }
+            
+            var status: Bool = false
+            var concluida: String = ""
+            while concluida.lowercased() != "y" && concluida.lowercased() != "n" && concluida.isEmpty{
+                print("A tarefa foi concluida? (Y/n) ")
+                if let teste = readLine(){
+                    concluida = teste
+                    concluida = teste.isEmpty ? tarefa!.1.titulo : teste
+                }
+                status = concluida.lowercased() == "y" ? true : false
+            }
+                
+            
+            let novatarefa: Tarefa = Tarefa(titulo: titulo, descricao: descricao, concluida: status)
+            listaNewUser.editarTarefa(tarefaAntiga: tarefa!.1, novaTarefa: novatarefa)
+            
+//            listaNewUser.removerTarefa(tarefaRemovida: tarefa!.1.titulo)
+        } else {
+            print("Erro: a entrada não é um número válido.")
+        }
+    }
+}
+
+func excluirTarefa(searchTerm: String) {
+    if let tupla: EnumeratedSequence<[Tarefa]> = listaNewUser.pesquisarTarefa(searchTerm: searchTerm) {
         print("\nEscolha o index da tarefa para remover")
         if let input = readLine(), let number = Int(input) {
             let tarefa = tupla.first(where: { element in
@@ -165,12 +190,31 @@ func excluirTarefa(search: String) {
         } else {
             print("Erro: a entrada não é um número válido.")
         }
-    }//que saco github
+    }
 }
+
+func mudarStatusTarefa(searchTerm: String){
+    if let tupla: EnumeratedSequence<[Tarefa]> = listaNewUser.pesquisarTarefa(searchTerm: searchTerm) {
+        print("\nEscolha o index da tarefa para alterar o status")
+        if let input = readLine(), let number = Int(input) {
+            print(tupla)
+            let tarefa = tupla.first(where: { element in
+                element.0 == number-1
+            })
+            listaNewUser.alterarStatusTarefa(searchTerm: tarefa!.1.titulo)
+            print(tarefa!.1.concluida ? "\nA Tarefa \(tarefa!.1.titulo) foi concluída": "\nA Tarefa \(tarefa!.1.titulo) não foi concluída")
+
+        } else {
+            print("Erro: a entrada não é um número válido.")
+        }
+    }
+}
+
 func executarAplicacao(){
     var running: Bool = true
     print("""
-        Ola! Bem vindo a nossa aplicação
+        
+        Ola! Bem vindo a nossa aplicação!
         """)
     while(running){
         print("""
@@ -190,20 +234,15 @@ func executarAplicacao(){
                 let argument = components.dropFirst().joined(separator: " ")
                 switch command {
                 case "new":
-                    newTarefa()
+                    novaTarefa()
                 case "remove":
-                    excluirTarefa(search: argument)
-                    print("remove")
-                    print("Argument: \(argument)")
+                    excluirTarefa(searchTerm: argument)
                 case "edit":
-                    print("edit")
-                    print("Argument: \(argument)")
+                    editarTarefa(searchTerm: argument)
                 case "changeStatus":
-                    print("changeStatus")
-                    print("Argument: \(argument)")
+                    mudarStatusTarefa(searchTerm: argument)
                 case "search":
-                    print("search")
-                    print("Argument: \(argument)")
+                    listaNewUser.pesquisarTarefa(searchTerm: argument)
                 case "list":
                     listaNewUser.listarTarefas()
                 case "end":
