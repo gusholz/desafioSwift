@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6449C5C62A0DA36500FA922F /* Tarefa.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6449C5C52A0DA36500FA922F /* Tarefa.swift */; };
+		6449C5C82A0DA39500FA922F /* ListaTarefas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6449C5C72A0DA39500FA922F /* ListaTarefas.swift */; };
 		CE634C172A0AED4F007ADF8C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE634C162A0AED4F007ADF8C /* main.swift */; };
 		CEBAF0F82A0C510000183527 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = CEBAF0F72A0C510000183527 /* ArgumentParser */; };
 		CEBAF0FA2A0C510000183527 /* generate-manual in Frameworks */ = {isa = PBXBuildFile; productRef = CEBAF0F92A0C510000183527 /* generate-manual */; };
@@ -25,6 +27,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6449C5C52A0DA36500FA922F /* Tarefa.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tarefa.swift; sourceTree = "<group>"; };
+		6449C5C72A0DA39500FA922F /* ListaTarefas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaTarefas.swift; sourceTree = "<group>"; };
 		CE634C132A0AED4F007ADF8C /* desafioSwift */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = desafioSwift; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE634C162A0AED4F007ADF8C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -61,7 +65,9 @@
 		CE634C152A0AED4F007ADF8C /* desafioSwift */ = {
 			isa = PBXGroup;
 			children = (
+				6449C5C72A0DA39500FA922F /* ListaTarefas.swift */,
 				CE634C162A0AED4F007ADF8C /* main.swift */,
+				6449C5C52A0DA36500FA922F /* Tarefa.swift */,
 			);
 			path = desafioSwift;
 			sourceTree = "<group>";
@@ -131,6 +137,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6449C5C82A0DA39500FA922F /* ListaTarefas.swift in Sources */,
+				6449C5C62A0DA36500FA922F /* Tarefa.swift in Sources */,
 				CE634C172A0AED4F007ADF8C /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
