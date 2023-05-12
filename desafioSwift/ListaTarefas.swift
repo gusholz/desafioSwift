@@ -18,9 +18,8 @@ struct ListaTarefas : Codable {
                 let data = try Data(contentsOf: filePath)
                 let decoder = JSONDecoder()
                 lista = try decoder.decode([Tarefa].self, from: data)
-                print(lista)
             } catch {
-                print("Sem arquivo de inicializacao. Comecando novo registro.")
+                print("Sem arquivo de inicialização. Comecando novo registro.")
             }
         }
     }
@@ -31,11 +30,7 @@ struct ListaTarefas : Codable {
         do {
             // Tentar codificar a struct para JSON
             let jsonData = try encoder.encode(lista)
-            
-            // Converta para uma string de JSON para impressão
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                print(jsonString)
-            }
+
             // Criar arquivo e salvar
             if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
                 let fileURL = dir.appendingPathComponent("listaTarefas.json")
@@ -43,9 +38,8 @@ struct ListaTarefas : Codable {
                 do {
                     try jsonData.write(to: fileURL)
                 }
-                catch { print("\(error)")}
+                catch { print("Não foi possível salvar o JSON")}
             }
-            print(lista)
         } catch {
             print("Erro ao codificar para JSON: \(error)")
         }
